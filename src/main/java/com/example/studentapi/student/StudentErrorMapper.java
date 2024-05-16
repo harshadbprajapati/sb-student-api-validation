@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class StudentErrorMapper {
+    private StudentErrorMapper() {}
 
     private static final Map<String, String> FIELD_MAPPING = new HashMap<>();
 
@@ -22,6 +23,6 @@ public class StudentErrorMapper {
     public static List<ApiError> mapErrors(Map<String, String> errors) {
         return errors.entrySet().stream()
                 .map(entry -> new ApiError(FIELD_MAPPING.getOrDefault(entry.getKey(), entry.getKey()), entry.getValue()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

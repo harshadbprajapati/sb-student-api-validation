@@ -21,16 +21,12 @@ public class StudentServiceImpl implements StudentService {
 
     private final ModelMapper modelMapper;
 
-    private final StudentErrorMapper studentErrorMapper;
-
     public StudentServiceImpl(Validator validator,
                                 StudentRepository studentRepository,
-                                ModelMapper modelMapper,
-                                StudentErrorMapper studentErrorMapper) {
+                                ModelMapper modelMapper) {
         this.validator = validator;
         this.studentRepository = studentRepository;
         this.modelMapper = modelMapper;
-        this.studentErrorMapper = studentErrorMapper;
     }
 
     @Override
@@ -38,7 +34,7 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = studentRepository.findAll();
         return students.stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -75,7 +71,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDto updateStudent(Long id, StudentDto studentDto) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
-        if (!optionalStudent.isPresent()) {
+        if (optionalStudent.isEmpty()) {
             throw new ResourceNotFoundException("Student not found with id: " + id);
         }
 
@@ -124,6 +120,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public static class StudentDtoToEntityMapper {
+        private StudentDtoToEntityMapper() {}
         public static void configure(ModelMapper modelMapper) {
             modelMapper.typeMap(StudentDto.class, Student.class)
                     .addMappings(mapper -> {
@@ -136,6 +133,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public static class StudentEntityToDtoMapper {
+        private StudentEntityToDtoMapper(){}
         public static void configure(ModelMapper modelMapper) {
             modelMapper.typeMap(Student.class, StudentDto.class)
                     .addMappings(mapper -> {

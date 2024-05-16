@@ -44,27 +44,21 @@ public class StudentController {
 
     @Operation(summary = "Create a new student specified by request body")
     @PostMapping
-    public ResponseEntity<?> createStudent(@Valid @RequestBody StudentDto studentDTO, BindingResult result) {
+    public ResponseEntity<?> createStudent(@Valid @RequestBody StudentDto studentDto, BindingResult result) {
         if (result.hasErrors()) {
             List<ApiError> errors = result.getFieldErrors().stream()
                     .map(fieldError -> new ApiError(fieldError.getField(), fieldError.getDefaultMessage()))
                     .collect(Collectors.toList());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
-        StudentDto createdStudent = studentService.createStudent(studentDTO);
+        StudentDto createdStudent = studentService.createStudent(studentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
 
     @Operation(summary = "Partial update a student specified by studentId and by request body")
     @PatchMapping("/{studentId}")
-    public ResponseEntity<?> updateStudent(@PathVariable("studentId") Long studentId, @RequestBody StudentDto studentDTO, BindingResult result) {
-        if (result.hasErrors()) {
-            List<ApiError> errors = result.getFieldErrors().stream()
-                    .map(fieldError -> new ApiError(fieldError.getField(), fieldError.getDefaultMessage()))
-                    .collect(Collectors.toList());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-        StudentDto updatedStudent = studentService.updateStudent(studentId, studentDTO);
+    public ResponseEntity<?> updateStudent(@PathVariable("studentId") Long studentId, @RequestBody StudentDto studentDto) {
+        StudentDto updatedStudent = studentService.updateStudent(studentId, studentDto);
         return ResponseEntity.ok(updatedStudent);
     }
 }
