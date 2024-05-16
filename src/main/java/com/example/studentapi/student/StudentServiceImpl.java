@@ -91,7 +91,11 @@ public class StudentServiceImpl implements StudentService {
     }
     private Map<String, String> validateStudentEntity(Student student) {
         return validator.validate(student).stream()
-                .map(violation -> Map.entry(violation.getPropertyPath().toString(),violation.getMessage()))
+                .map(violation -> Map.entry(
+                                    violation.getPropertyPath().toString(),
+                                    violation.getMessage()
+                                )
+                )
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
