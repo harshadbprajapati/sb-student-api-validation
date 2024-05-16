@@ -6,30 +6,18 @@
 
 > Uses inmemory db, so no need to setup any database.
 
-> Separating input from API and data for storage in form of DTO and Entity.
+> Separating input for API and data for storage in form of DTO and Entity.
 
-> Field names in DTO and Entity are intentionally different to show mapping and error field mapping.
+> Field names in DTO and Entity are intentionally different to show field mapping and error field mapping.
 
 > Transforming DTO into Entity, and vice versa using ModelMapper.
 
-> Validation on DTO and sending field level errors.
+> Validation on DTO and sending field level errors at controller layer.
 
-> Validation on Entity and generating field level errors.
+> Validation on Entity and generating field level errors in service layer.
 
 > Transforming validation errors of Entity fields into corresponding fields of DTO.
 
 > Throwing appropriate exceptions from service and handling in global exception handler.
 
 > API Docs using springdocs, provides swagger-ui.
-
-
-
-
-
-
-
-
-
-
-
-
