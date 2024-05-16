@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class StudentErrorMapper {
@@ -22,7 +21,10 @@ public class StudentErrorMapper {
 
     public static List<ApiError> mapErrors(Map<String, String> errors) {
         return errors.entrySet().stream()
-                .map(entry -> new ApiError(FIELD_MAPPING.getOrDefault(entry.getKey(), entry.getKey()), entry.getValue()))
+                .map(entry -> new ApiError(
+                                FIELD_MAPPING.getOrDefault(entry.getKey(),
+                                entry.getKey()), entry.getValue())
+                )
                 .toList();
     }
 }
