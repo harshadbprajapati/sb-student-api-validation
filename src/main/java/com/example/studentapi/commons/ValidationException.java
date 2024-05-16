@@ -1,7 +1,10 @@
 package com.example.studentapi.commons;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class ValidationException extends RuntimeException {
 
     private List<ApiError> errors;
@@ -10,7 +13,4 @@ public class ValidationException extends RuntimeException {
         this.errors = errors;
     }
 
-    public List<ApiError> getErrors() {
-        return errors;
-    }
 }
