@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/students")
@@ -48,7 +47,7 @@ public class StudentController {
         if (result.hasErrors()) {
             List<ApiError> errors = result.getFieldErrors().stream()
                     .map(fieldError -> new ApiError(fieldError.getField(), fieldError.getDefaultMessage()))
-                    .collect(Collectors.toList());
+                    .toList();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
         StudentDto createdStudent = studentService.createStudent(studentDto);
