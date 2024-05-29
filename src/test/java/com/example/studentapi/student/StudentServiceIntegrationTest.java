@@ -38,8 +38,14 @@ public class StudentServiceIntegrationTest {
     @Test
     void testGetAllStudents_ShouldReturnStudentDtos() {
         // Arrange: Populate the database with sample student data
-        StudentDto student1 = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
-        StudentDto student2 = new StudentDto(null, "Will", "Smith", "will.smith@example.com");
+        StudentDto student1 = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        StudentDto student2 = new StudentDto(null,
+                "Will",
+                "Smith",
+                "will.smith@example.com");
         studentService.createStudent(student1);
         studentService.createStudent(student2);
 
@@ -59,7 +65,10 @@ public class StudentServiceIntegrationTest {
     @Test
     void testGetStudentById_WithValidId_ShouldReturnStudentDto() {
         // Arrange: Populate the database with sample student data
-        StudentDto student = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto student = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
         StudentDto savedStudent = studentService.createStudent(student);
 
         // Act: Call the getStudentById method with the ID of the saved student
@@ -76,20 +85,28 @@ public class StudentServiceIntegrationTest {
     @Test
     void testDeleteStudent_WithValidId_ShouldDeleteStudent() {
         // Arrange: Populate the database with a sample student
-        StudentDto student = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto student = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
         StudentDto savedStudent = studentService.createStudent(student);
 
         // Act: Call the deleteStudent method with the ID of the saved student
         studentService.deleteStudent(savedStudent.getId());
 
         // Assert: Verify that the student has been deleted from the database
-        assertThrows(ResourceNotFoundException.class, () -> studentService.getStudentById(savedStudent.getId()));
+        assertThrows(ResourceNotFoundException.class,
+                () -> studentService.getStudentById(savedStudent.getId())
+        );
     }
 
     @Test
     void testUpdateStudent_WithValidIdAndDto_ShouldReturnUpdatedStudentDto() {
         // Arrange: Populate the database with a sample student
-        StudentDto student = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto student = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
         StudentDto savedStudent = studentService.createStudent(student);
 
         // Create an updated student DTO
@@ -104,8 +121,11 @@ public class StudentServiceIntegrationTest {
         // Assert: Verify that the student has been updated correctly
         assertNotNull(updatedStudent);
         assertEquals(savedStudent.getId(), updatedStudent.getId());
-        assertEquals(updatedStudentDto.getStudentFirstName(), updatedStudent.getStudentFirstName());
-        assertEquals(updatedStudentDto.getStudentLastName(), updatedStudent.getStudentLastName());
-        assertEquals(updatedStudentDto.getStudentEmail(), updatedStudent.getStudentEmail());
+        assertEquals(updatedStudentDto.getStudentFirstName(),
+                updatedStudent.getStudentFirstName());
+        assertEquals(updatedStudentDto.getStudentLastName(),
+                updatedStudent.getStudentLastName());
+        assertEquals(updatedStudentDto.getStudentEmail(),
+                updatedStudent.getStudentEmail());
     }
 }

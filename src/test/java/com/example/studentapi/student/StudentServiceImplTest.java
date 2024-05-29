@@ -1,11 +1,7 @@
 package com.example.studentapi.student;
 
 import com.example.studentapi.commons.ResourceNotFoundException;
-import com.example.studentapi.commons.ValidationException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Path;
 import jakarta.validation.Validator;
-import jakarta.validation.metadata.ConstraintDescriptor;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,7 +39,10 @@ class StudentServiceImplTest {
         when(modelMapper.map(any(Student.class), eq(StudentDto.class))).thenAnswer(
                 invocation -> {
                     Student student = invocation.getArgument(0);
-                    return new StudentDto(student.getId(), student.getFirstName(), student.getLastName(), student.getEmail());
+                    return new StudentDto(student.getId(),
+                            student.getFirstName(),
+                            student.getLastName(),
+                            student.getEmail());
                 });
 
         // Act
@@ -65,7 +64,11 @@ class StudentServiceImplTest {
         Long studentId = 1L;
         Student student = new Student(studentId, "Tom", "Cruise", "tom.cruise@example.com");
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(student));
-        when(modelMapper.map(student, StudentDto.class)).thenReturn(new StudentDto(studentId, "Tom", "Cruise", "tom.cruise@example.com"));
+        when(modelMapper.map(student, StudentDto.class)).thenReturn(new StudentDto(
+                studentId,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com"));
 
         // Act
         StudentDto result = studentService.getStudentById(studentId);
@@ -138,8 +141,15 @@ class StudentServiceImplTest {
     void testUpdateStudent_ExistingId_ShouldUpdateStudent() {
         // Arrange
         Long studentId = 1L;
-        Student existingStudent = new Student(studentId, "Tom", "Cruise", "tom.cruise@example.com");
-        StudentDto studentDto = new StudentDto(studentId, "Will", "Smith", "will.smith@example.com");
+        Student existingStudent = new Student(studentId,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        StudentDto studentDto = new StudentDto(
+                studentId,
+                "Will",
+                "Smith",
+                "will.smith@example.com");
 
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(existingStudent));
         when(modelMapper.map(studentDto, Student.class)).thenReturn(existingStudent);
@@ -161,14 +171,16 @@ class StudentServiceImplTest {
     void testUpdateStudent_NonExistingId_ShouldThrowResourceNotFoundException() {
         // Arrange
         Long studentId = 1L;
-        StudentDto studentDto = new StudentDto(studentId, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto studentDto = new StudentDto(
+                studentId,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
 
         when(studentRepository.findById(studentId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(ResourceNotFoundException.class, () -> studentService.updateStudent(studentId, studentDto));
+        assertThrows(ResourceNotFoundException.class,
+                () -> studentService.updateStudent(studentId, studentDto));
     }
-
-
-
 }

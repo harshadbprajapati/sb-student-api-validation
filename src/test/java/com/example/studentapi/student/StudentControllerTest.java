@@ -37,8 +37,14 @@ class StudentControllerTest {
     @Test
     void testGetAllStudents_ShouldReturnListOfStudents() throws Exception {
         // Arrange
-        StudentDto student1 = new StudentDto(1L, "Tom", "Cruise", "tom.cruise@example.com");
-        StudentDto student2 = new StudentDto(2L, "Will", "Smith", "will.smith@example.com");
+        StudentDto student1 = new StudentDto(1L,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        StudentDto student2 = new StudentDto(2L,
+                "Will",
+                "Smith",
+                "will.smith@example.com");
         List<StudentDto> students = Arrays.asList(student1, student2);
         when(studentService.getAllStudents()).thenReturn(students);
 
@@ -49,22 +55,33 @@ class StudentControllerTest {
         response.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$[0].studentFirstName", Matchers.is("Tom")))
-                .andExpect(jsonPath("$[0].studentLastName", Matchers.is("Cruise")))
-                .andExpect(jsonPath("$[0].studentEmail", Matchers.is("tom.cruise@example.com")))
-                .andExpect(jsonPath("$[1].studentFirstName", Matchers.is("Will")))
-                .andExpect(jsonPath("$[1].studentLastName", Matchers.is("Smith")))
-                .andExpect(jsonPath("$[1].studentEmail", Matchers.is("will.smith@example.com")));
+                .andExpect(jsonPath("$[0].studentFirstName",
+                        Matchers.is("Tom")))
+                .andExpect(jsonPath("$[0].studentLastName",
+                        Matchers.is("Cruise")))
+                .andExpect(jsonPath("$[0].studentEmail",
+                        Matchers.is("tom.cruise@example.com")))
+                .andExpect(jsonPath("$[1].studentFirstName",
+                        Matchers.is("Will")))
+                .andExpect(jsonPath("$[1].studentLastName",
+                        Matchers.is("Smith")))
+                .andExpect(jsonPath("$[1].studentEmail",
+                        Matchers.is("will.smith@example.com")));
     }
 
     @Test
     void testGetStudentById_ExistingId_ShouldReturnStudent() throws Exception {
         // Arrange
-        StudentDto student = new StudentDto(1L, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto student = new StudentDto(1L,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
         when(studentService.getStudentById(1L)).thenReturn(student);
 
         // Act
-        ResultActions response = mockMvc.perform(get("/api/students/{studentId}", 1L));
+        ResultActions response = mockMvc.perform(
+                get("/api/students/{studentId}", 1L)
+        );
 
         // Assert
         response.andExpect(status().isOk())
@@ -77,8 +94,14 @@ class StudentControllerTest {
     @Test
     void testCreateStudent_ValidInput_ShouldReturnCreatedStudent() throws Exception {
         // Arrange
-        StudentDto studentDto = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
-        StudentDto createdStudentDto = new StudentDto(1L, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto studentDto = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        StudentDto createdStudentDto = new StudentDto(1L,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
         when(studentService.createStudent(studentDto)).thenReturn(createdStudentDto);
 
         // Act
@@ -101,7 +124,9 @@ class StudentControllerTest {
         doNothing().when(studentService).deleteStudent(1L);
 
         // Act
-        ResultActions response = mockMvc.perform(delete("/api/students/{studentId}", 1L));
+        ResultActions response = mockMvc.perform(
+                delete("/api/students/{studentId}", 1L)
+        );
 
         // Assert
         response.andExpect(status().isOk())
@@ -110,14 +135,24 @@ class StudentControllerTest {
     @Test
     void testUpdateStudent_ExistingIdAndValidInput_ShouldReturnUpdatedStudent() throws Exception {
         // Arrange
-        StudentDto updateRequestStudentDto = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
-        StudentDto updatedStudentDto = new StudentDto(1L, "Tom", "Cruise", "tom.cruise@example.com");
-        when(studentService.updateStudent(anyLong(), Mockito.any(StudentDto.class))).thenReturn(updatedStudentDto);
+        StudentDto updateRequestStudentDto = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        StudentDto updatedStudentDto = new StudentDto(1L,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        when(studentService.updateStudent(
+                anyLong(),
+                Mockito.any(StudentDto.class))
+        ).thenReturn(updatedStudentDto);
 
         // Act
-        ResultActions response = mockMvc.perform(patch("/api/students/{studentId}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateRequestStudentDto)));
+        ResultActions response = mockMvc.perform(
+                patch("/api/students/{studentId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateRequestStudentDto)));
         // Assert
         response.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

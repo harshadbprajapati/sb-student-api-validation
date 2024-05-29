@@ -78,8 +78,14 @@ public class StudentControllerIntegrationTest {
     @Test
     void testCreateStudent_ValidInput_ShouldReturnCreatedStudentDto() throws Exception {
         //Arrange
-        StudentDto studentDto = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
-        StudentDto createdStudentDto = new StudentDto(1L, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto studentDto = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
+        StudentDto createdStudentDto = new StudentDto(1L,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
 
         //Act
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/api/students")
@@ -99,7 +105,8 @@ public class StudentControllerIntegrationTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void testDeleteStudent_ExistingId_ShouldReturnSuccessMessage() throws Exception {
         //Act
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.delete("/api/students/{studentId}", 1000L));
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/students/{studentId}", 1000L));
         //Assert
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Student with studentId 1000 is deleted"));
@@ -113,9 +120,13 @@ public class StudentControllerIntegrationTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testUpdateStudent_ExistingIdAndValidInput_ShouldReturnUpdatedStudentDto() throws Exception {
         //Arrange
-        StudentDto studentDto = new StudentDto(2000L,"Tomkumar", "Cruise", "tom.cruise@example.com");
+        StudentDto studentDto = new StudentDto(2000L,
+                "Tomkumar",
+                "Cruise",
+                "tom.cruise@example.com");
         //Act
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.patch("/api/students/{studentId}", 2000L)
+        ResultActions response = mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/students/{studentId}", 2000L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(studentDto)));
         //Assert

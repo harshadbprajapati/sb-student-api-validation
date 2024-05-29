@@ -96,7 +96,10 @@ public class StudentE2ETest {
             "DELETE FROM student WHERE FIRST_NAME = 'Tom'"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testCreateStudent_ValidInput_ShouldReturnCreatedStudentDto() {
-        StudentDto studentDto = new StudentDto(null, "Tom", "Cruise", "tom.cruise@example.com");
+        StudentDto studentDto = new StudentDto(null,
+                "Tom",
+                "Cruise",
+                "tom.cruise@example.com");
 
         // Act
         ResponseEntity<StudentDto> response = restTemplate.postForEntity(baseUrl, studentDto, StudentDto.class);
@@ -141,7 +144,10 @@ public class StudentE2ETest {
         Long studentId = 5000L;
         String patchUrl = baseUrl + "/" + studentId;
 
-        StudentDto updatedStudentDto = new StudentDto(null, "Tomkumar", "Cruise", "tom.cruise@example.com");
+        StudentDto updatedStudentDto = new StudentDto(null,
+                "Tomkumar",
+                "Cruise",
+                "tom.cruise@example.com");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
