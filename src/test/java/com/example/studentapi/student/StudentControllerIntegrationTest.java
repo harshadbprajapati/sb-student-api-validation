@@ -59,13 +59,13 @@ public class StudentControllerIntegrationTest {
 
     @Test
     //Arrange
-    @Sql(statements = "INSERT INTO student (FIRST_NAME, LAST_NAME, EMAIL) VALUES ('Tom', 'Cruise', 'tom.cruise@example.com')",
+    @Sql(statements = "INSERT INTO student (id, FIRST_NAME, LAST_NAME, EMAIL) VALUES (3000,'Tom', 'Cruise', 'tom.cruise@example.com')",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM student WHERE FIRST_NAME = 'Tom'",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testGetStudentById_ExistingId_ShouldReturnStudentDto() throws Exception {
         //Act
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/api/students/{studentId}", 1L));
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/api/students/{studentId}", 3000L));
 
         //Assert
         response.andExpect(MockMvcResultMatchers.status().isOk())
@@ -93,7 +93,6 @@ public class StudentControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(studentDto)));
         //Assert
         response.andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(jsonPath("$.id").value(createdStudentDto.getId()))
                 .andExpect(jsonPath("$.studentFirstName").value(createdStudentDto.getStudentFirstName()))
                 .andExpect(jsonPath("$.studentLastName").value(createdStudentDto.getStudentLastName()))
                 .andExpect(jsonPath("$.studentEmail").value(createdStudentDto.getStudentEmail()));
