@@ -30,9 +30,6 @@ public class StudentControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private StudentRepository studentRepository;
-
     @Test
     //Arrange
     @Sql(statements = "INSERT INTO student (FIRST_NAME, LAST_NAME, EMAIL) VALUES ('Tom', 'Cruise', 'tom.cruise@example.com')",
