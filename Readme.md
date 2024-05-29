@@ -21,3 +21,9 @@
 > Throwing appropriate exceptions from service and handling in global exception handler.
 
 > API Docs using springdocs, provides swagger-ui.
+
+> Unit tests for Repository, Service, and Controller.
+
+> Integration tests for service-repository and controller-service.
+
+> End-to-end test for student feature.
