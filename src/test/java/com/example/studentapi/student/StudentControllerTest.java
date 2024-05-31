@@ -1,5 +1,6 @@
 package com.example.studentapi.student;
 
+import com.example.studentapi.commons.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -92,6 +93,22 @@ class StudentControllerTest {
     }
 
     @Test
+    void testGetStudentById_NonExistingId_ShouldReturnNotFound() throws Exception {
+        // Arrange
+        when(studentService.getStudentById(anyLong())).thenThrow(
+                new ResourceNotFoundException("Student not found")
+        );
+
+        // Act
+        ResultActions response = mockMvc.perform(
+                get("/api/students/{studentId}", 1L)
+        );
+
+        // Assert
+        response.andExpect(status().isNotFound());
+    }
+
+    @Test
     void testCreateStudent_ValidInput_ShouldReturnCreatedStudent() throws Exception {
         // Arrange
         StudentDto studentDto = new StudentDto(null,
@@ -116,6 +133,27 @@ class StudentControllerTest {
                         CoreMatchers.is(createdStudentDto.getStudentFirstName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.studentLastName",
                         CoreMatchers.is(createdStudentDto.getStudentLastName())));
+    }
+
+    @Test
+    void testCreateStudent_IncompleteInput_ShouldReturnBadRequestWithFieldErrors() throws Exception {
+        // Arrange
+        StudentDto incompleteStudentDto = new StudentDto(null,
+                null, null, "tom@example.com");
+
+        // Act
+        ResultActions response = mockMvc.perform(post("/api/students")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(incompleteStudentDto)));
+
+        // Assert
+        response.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].field").value("studentFirstName"))
+                .andExpect(jsonPath("$[0].message").value("First name is required"))
+                .andExpect(jsonPath("$[1].field").value("studentLastName"))
+                .andExpect(jsonPath("$[1].message").value("Last name is required"));
     }
 
     @Test
@@ -159,5 +197,25 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.studentFirstName").value("Tom"))
                 .andExpect(jsonPath("$.studentLastName").value("Cruise"))
                 .andExpect(jsonPath("$.studentEmail").value("tom.cruise@example.com"));
+    }
+
+    @Test
+    void testUpdateStudent_NonExistingId_ShouldReturnNotFound() throws Exception {
+        // Arrange
+        StudentDto updateRequestStudentDto = new StudentDto(null,
+                "Tom",
+                "Cruise", "tom.cruise@example.com");
+        when(studentService.updateStudent(anyLong(), Mockito.any(StudentDto.class)))
+                .thenThrow(new ResourceNotFoundException("Student not found"));
+
+        // Act
+        ResultActions response = mockMvc.perform(
+                patch("/api/students/{studentId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateRequestStudentDto))
+        );
+
+        // Assert
+        response.andExpect(status().isNotFound());
     }
 }
