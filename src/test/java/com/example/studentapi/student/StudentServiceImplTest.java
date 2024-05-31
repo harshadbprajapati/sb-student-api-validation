@@ -1,7 +1,11 @@
 package com.example.studentapi.student;
 
 import com.example.studentapi.commons.ResourceNotFoundException;
+import com.example.studentapi.commons.ValidationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Path;
 import jakarta.validation.Validator;
+import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -114,6 +118,43 @@ class StudentServiceImplTest {
     }
 
     @Test
+    void testCreateStudent_WithInvalidDto_ShouldThrowValidationException() {
+        // Arrange
+        StudentDto invalidStudentDto = new StudentDto();
+        invalidStudentDto.setStudentFirstName("");
+        invalidStudentDto.setStudentLastName("");
+        invalidStudentDto.setStudentEmail("");
+
+        Student invalidStudentEntity = new Student();
+        invalidStudentEntity.setId(1L);
+        invalidStudentEntity.setFirstName(invalidStudentDto.getStudentFirstName());
+        invalidStudentEntity.setLastName(invalidStudentDto.getStudentLastName());
+        invalidStudentEntity.setEmail(invalidStudentDto.getStudentEmail());
+
+        when(modelMapper.map(invalidStudentDto, Student.class)).thenReturn(invalidStudentEntity);
+
+        // Mock the behavior of validator
+        Validator validatorMock = mock(Validator.class);
+        ConstraintViolation<Student> violation = mock(ConstraintViolation.class);
+
+        Path propertyPath = mock(Path.class);
+        when(propertyPath.toString()).thenReturn("Mocked Path String");
+
+        when(violation.getPropertyPath()).thenReturn(propertyPath);
+        when(violation.getPropertyPath()).thenReturn(propertyPath);
+        when(violation.getMessage()).thenReturn("Invalid value");
+
+        when(validatorMock.validate(any(Student.class))).thenReturn(Collections.singleton(violation));
+
+        // Create a StudentServiceImpl instance with the mocked validator
+        StudentServiceImpl studentService = new StudentServiceImpl(validatorMock, studentRepository, modelMapper);
+
+        // Act and Assert
+        assertThrows(ValidationException.class, () -> studentService.createStudent(invalidStudentDto));
+    }
+
+
+    @Test
     void testDeleteStudent_ExistingId_ShouldDeleteStudent() {
         // Arrange
         Long studentId = 1L;
@@ -182,5 +223,44 @@ class StudentServiceImplTest {
         // Act and Assert
         assertThrows(ResourceNotFoundException.class,
                 () -> studentService.updateStudent(studentId, studentDto));
+    }
+
+    @Test
+    void testUpdateStudent_WithInvalidDto_ShouldThrowValidationException() {
+        // Arrange
+        Long studentId = 1L;
+        StudentDto invalidStudentDto = new StudentDto();
+        invalidStudentDto.setStudentFirstName("");
+        invalidStudentDto.setStudentLastName("");
+        invalidStudentDto.setStudentEmail("");
+
+        Student invalidStudentEntity = new Student();
+        invalidStudentEntity.setId(studentId);
+        invalidStudentEntity.setFirstName(invalidStudentDto.getStudentFirstName());
+        invalidStudentEntity.setLastName(invalidStudentDto.getStudentLastName());
+        invalidStudentEntity.setEmail(invalidStudentDto.getStudentEmail());
+
+        when(modelMapper.map(invalidStudentDto, Student.class)).thenReturn(invalidStudentEntity);
+
+        when(studentRepository.findById(studentId)).thenReturn(Optional.of(invalidStudentEntity));
+
+        // Mock the behavior of validator
+        Validator validatorMock = mock(Validator.class);
+        ConstraintViolation<Student> violation = mock(ConstraintViolation.class);
+
+        Path propertyPath = mock(Path.class);
+        when(propertyPath.toString()).thenReturn("Mocked Path String");
+
+        when(violation.getPropertyPath()).thenReturn(propertyPath);
+        when(violation.getPropertyPath()).thenReturn(propertyPath);
+        when(violation.getMessage()).thenReturn("Invalid value");
+
+        when(validatorMock.validate(any(Student.class))).thenReturn(Collections.singleton(violation));
+
+        // Create a StudentServiceImpl instance with the mocked validator
+        StudentServiceImpl studentService = new StudentServiceImpl(validatorMock, studentRepository, modelMapper);
+
+        // Act and Assert
+        assertThrows(ValidationException.class, () -> studentService.updateStudent(studentId, invalidStudentDto));
     }
 }
