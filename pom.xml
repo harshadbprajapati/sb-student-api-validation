@@ -102,10 +102,42 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<!-- Surefire plugin for running unit tests -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/*IT.java</exclude>
+						<exclude>**/*IntegrationTest.java</exclude>
+						<exclude>**/*E2ETest.java</exclude>
+						<exclude>**/*EndToEndTest.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<!-- Failsafe plugin for running integration tests and end-to-end tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>integration-tests</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/*IT.java</include>
+								<include>**/*IntegrationTest.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
