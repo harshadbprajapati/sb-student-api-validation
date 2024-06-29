@@ -150,10 +150,8 @@ class StudentControllerTest {
         response.andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$[0].field").value("studentFirstName"))
-                .andExpect(jsonPath("$[0].message").value("First name is required"))
-                .andExpect(jsonPath("$[1].field").value("studentLastName"))
-                .andExpect(jsonPath("$[1].message").value("Last name is required"));
+                .andExpect(jsonPath("$[*].field", Matchers.containsInAnyOrder("studentFirstName", "studentLastName")))
+                .andExpect(jsonPath("$[*].message", Matchers.containsInAnyOrder("First name is required", "Last name is required")));
     }
 
     @Test
